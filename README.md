@@ -17,25 +17,11 @@ This repository is deliberately a **falsification instrument**. A negative resul
 - `dirac_t3.py` contains the simplified eigenvalue and state-count routines.
 - `tests/test_research.py` checks volume normalization, deterministic sampling, nonnegative counts, ranking, and CSV output.
 
-## Run privately
+## Execution status
 
-Run from the repository root:
+The repository content is committed and ready, but the experiments are **not executed in this GitHub-only workflow**. No virtual environment has been created here, no tests or scripts have been run here, and no numerical result is being claimed.
 
-```bash
-python -m venv .venv
-source .venv/bin/activate       # Windows: .venv\\Scripts\\activate
-pip install -r requirements.txt
-
-python -m pytest -v
-python random_baseline.py
-python convergence.py
-
-python --version > results/python_version.txt
-pip freeze > results/freeze.txt
-echo "$RANDOM_SEED"
-```
-
-The default run produces these five reproducibility artifacts:
+Execution-verified status begins only after a local run completes successfully and all five artifacts are present under `results/`:
 
 ```text
 results/random_baseline.csv
@@ -45,18 +31,36 @@ results/python_version.txt
 results/freeze.txt
 ```
 
+There is no deployment. The project is a local research-engineering probe until those artifacts are generated and reviewed.
+
+## Run locally
+
+From a fresh clone and the repository root:
+
+```bash
+git clone https://github.com/MathHeroez/unknown.git
+cd unknown
+python -m venv .venv
+source .venv/bin/activate       # Windows: .venv\\Scripts\\activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+python -m pytest -v
+python random_baseline.py
+python convergence.py
+
+python --version > results/python_version.txt
+python -m pip freeze > results/freeze.txt
+ls -lh results/
+```
+
+On Windows PowerShell, activate the environment with:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
 The scripts use the repository's computational toy-model implementation. Do not replace it with a placeholder ratio-cost or noise-based convergence script.
-
-## Engineering Skills Demonstrated
-
-- Reproducible Python environments and dependency capture
-- Parameterized numerical experiments
-- Fixed-volume constrained optimization
-- Randomized null-model testing
-- Cutoff and grid-convergence analysis
-- Deterministic seeds and experiment logging
-- Unit testing of numerical invariants and output contracts
-- Explicit failure criteria and uncertainty-aware reporting
 
 ## Archive policy
 
@@ -75,6 +79,17 @@ git push
 ```
 
 Before publishing, inspect `results/freeze.txt` and all CSV files for sensitive paths, private package indexes, local usernames, or other information that should not be public. Leaving generated outputs untracked is the conservative default for this exploratory research probe.
+
+## Engineering Skills Demonstrated
+
+- Reproducible Python environments and dependency capture
+- Parameterized numerical experiments
+- Fixed-volume constrained optimization
+- Randomized null-model testing
+- Cutoff and grid-convergence analysis
+- Deterministic seeds and experiment logging
+- Unit testing of numerical invariants and output contracts
+- Explicit failure criteria and uncertainty-aware reporting
 
 ## Reproducibility log
 
