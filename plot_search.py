@@ -9,7 +9,7 @@ from dirac_t3 import count_states
 def search_grid(Lambda=12, steps=25):
     grid = np.linspace(0.5, 2.5, steps)
     counts = np.zeros((steps, steps))
-    positions = []
+    candidates = []
 
     for i, r1 in enumerate(grid):
         for j, r2 in enumerate(grid):
@@ -19,15 +19,16 @@ def search_grid(Lambda=12, steps=25):
                 continue
             R = (r1, r2, r3)
             counts[i, j] = count_states(R, Lambda=Lambda, cutoff=15)
-            positions.append((r1, r2, counts[i, j]))
+            candidates.append((r1, r2, counts[i, j]))
 
-    best = min((c, (r1, r2)) for (r1, r2, c) in positions if not np.isnan(c))
+    valid = [(r1, r2, c) for r1, r2, c in candidates if not np.isnan(c)]
+    best = min(valid, key=lambda x: x[2])
     return grid, counts, best
 
 
 if __name__ == "__main__":
     grid, counts, best = search_grid(Lambda=12, steps=25)
-    min_count, (best_r1, best_r2) = best
+    best_r1, best_r2, min_count = best
 
     fig, ax = plt.subplots(figsize=(8, 7))
     mesh = ax.imshow(

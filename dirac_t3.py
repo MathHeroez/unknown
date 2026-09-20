@@ -2,18 +2,7 @@ import numpy as np
 
 
 def dirac_eigenvalues(R, eps=(0.5, 0.5, 0.5), cutoff=5):
-    """
-    Compute the positive Dirac eigenvalue magnitudes on T^3.
-
-    Parameters
-    ----------
-    R : tuple[float, float, float]
-        Torus radii (R1, R2, R3).
-    eps : tuple[float, float, float]
-        Twist parameters in the boundary conditions.
-    cutoff : int
-        Integer lattice cutoff for each momentum direction.
-    """
+    """Compute positive Dirac eigenvalue magnitudes on T^3."""
     R1, R2, R3 = R
     e1, e2, e3 = eps
     vals = []

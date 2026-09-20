@@ -1,95 +1,91 @@
 # S4 x T3 Dirac Spectral Action: A Toy Probe
 
-> **Honest status:** This is a computational toy model for investigating whether certain arithmetic radius ratios are favored by a simplified spectral-count objective. It does **not** prove that \(\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5})\) emerges from geometry.
+> Honest status: this repository is a small computational probe for a conjectural idea, not a proof and not a physical model. It explores whether a simplified spectral-count objective on a 3-torus favors a special arithmetic radius ratio.
 
-## What this project is
+## What this project does
 
-A reproducible test rig for checking a mathematical hunch quickly—minutes of computation instead of months of hand-waving.
-
-The code explores a simplified Dirac spectrum on a three-torus \(T^3\) with variable radii
+This project studies a simplified Dirac spectrum on a three-torus \(T^3\) with variable radii
 
 \[
-R=(R_1,R_2,R_3),
+R=(R_1,R_2,R_3).
 \]
 
-and counts modes below a cutoff:
+The code computes a finite set of eigenvalues and counts how many of them lie below a cutoff scale \(\Lambda\):
 
 \[
-N(R)=\#\{\mu: \mu^2<\Lambda^2\}.
+N(R)=\#\{\mu : \mu^2<\Lambda^2\}.
 \]
 
-It compares radius configurations at fixed volume, including a candidate related to
-
-\[
-\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5}).
-\]
+It then compares different radius ratios while keeping the total volume fixed. The goal is not to claim a theorem, but to see whether a structured geometry is numerically favored under a simple spectral heuristic.
 
 ## What this project is not
 
-- Not a proof that the field \(\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5})\) emerges.
-- Not a complete spectral-action calculation.
-- Not a validated physical model.
-- Not a real-world engineering, medical, financial, or prediction tool.
-- Not evidence for a Theory of Everything.
+- It is not a proof that \(\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5})\) emerges from geometry.
+- It is not a complete spectral-action calculation.
+- It is not a validated physical model.
+- It is not a real-world engineering or prediction tool.
+- It is not a theory of everything.
 
-The current objective is deliberately limited and simplified. The candidate field was considered from the outset, so treating a favorable result as a discovery would be circular.
+This is intentionally a toy experiment. It exists to answer one narrow question: does the idea survive a quick numerical sanity check?
 
 ## Why it may still be useful
 
-This repository provides a small, reproducible way to test whether the idea survives basic numerical scrutiny. A negative result is useful: it can rule out an attractive but unsupported conjecture before substantial effort is spent on it. A positive result would only motivate better-controlled research; it would not establish the conjecture.
+A minimized spectral heuristic can be useful as a hypothesis generator. It is a way to test whether a concept is obviously nonsense or is worth more careful mathematical work. The repository is therefore a quick reproducibility tool and a transparency device: it makes the assumptions visible instead of hiding them behind vague claims.
 
 ## Current limitations
 
-1. **Simplified objective** — the code minimizes a mode count rather than the full spectral action \(\operatorname{Tr} f(D^2/\Lambda^2)\).
-2. **Finite numerical search** — results depend on grid resolution and search bounds.
-3. **Cutoff dependence** — both the lattice cutoff and \(\Lambda\) require convergence studies.
-4. **Possible degeneracies and boundary effects** — a low count need not represent meaningful geometry.
-5. **Circular candidate selection** — the arithmetic field was not predicted independently of the experiment.
-6. **No empirical connection** — the model currently makes no tested prediction about the physical world.
+1. The objective is a raw state count, not the full spectral action.
+2. The search is a finite grid, not a mathematically rigorous global optimization.
+3. The cutoff introduces discretization effects and convergence questions.
+4. The candidate field may be implicitly baked into the setup instead of predicted independently.
+5. No experimental or physical prediction is claimed.
+6. No claim of emergence or proof is made.
 
-## Files
+## Repository contents
 
-- `dirac_t3.py` — simplified T³ Dirac eigenvalue and state-count routines
-- `minimize.py` — fixed-volume grid search over radius ratios
-- `plot_search.py` — heatmap of the grid search
-- `requirements.txt` — Python dependencies
-- `.gitignore` — local environment and generated-file exclusions
+- `dirac_t3.py` — simplified Dirac eigenvalue and counting routines
+- `minimize.py` — fixed-volume ratio search over a grid of radii
+- `plot_search.py` — heatmap-based visualization of the search landscape
+- `README.md` — project goals, scope, and caveats
+- `.gitignore` — local environment and generated artifact exclusions
+- `requirements.txt` — project dependencies
 
 ## Quick start
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python minimize.py
 python plot_search.py
 ```
 
-The plotting script writes `spectral_search.png`, which is intentionally ignored by Git.
+The plotting script saves a PNG image to `spectral_search.png`.
 
-## What would make the test stronger?
+## Interpretation of results
 
-A more serious follow-up should:
+- If the minimum stays near the isotropic point, the simplified objective does not favor a special structured geometry.
+- If the minimum is near a structured ratio, that is only a numerical clue. It is not evidence of emergence and requires a more rigorous model.
+- This project is intentionally designed to test plausibility, not to establish a conclusion.
 
-1. Replace the count with a justified spectral-action objective,
-   \(\operatorname{Tr} f(D^2/\Lambda^2)\).
-2. Test convergence as the lattice cutoff tends to infinity.
-3. Repeat the search over many \(\Lambda\), twist parameters, and volume normalizations.
-4. Compare against thousands of random fixed-volume radius triples, not only \((1,1,1)\).
-5. Use independent optimization methods and report uncertainty or tie structure.
-6. Test whether the special field was selected by the model rather than inserted as a candidate.
-7. State a mathematical or physical prediction that could in principle be independently checked.
+## What would make the experiment stronger?
 
-## Interpretation
+A more serious follow-up would require:
 
-If the minimum is near \((1,1,1)\), this simple objective does not favor the proposed structured ratio.
+1. Replacing the count with a true spectral action objective.
+2. Running convergence checks over cutoff and grid size.
+3. Comparing against a large random baseline of fixed-volume radius triples.
+4. Testing multiple objective functions and parameter choices.
+5. Reporting whether the candidate arithmetic field was independently predicted or simply inserted by hand.
+6. Defining a mathematically or physically meaningful prediction that could be checked independently.
 
-If a structured ratio repeatedly appears, that is only a numerical clue. It could reflect discretization, symmetry, cutoff artifacts, or the choice of objective. It should be treated as a hypothesis for further analysis—not as proof of emergence.
+## Security and reproducibility
 
-## Reproducibility and security
+- Keep unpublished work private if appropriate.
+- Do not commit credentials, tokens, or environment files.
+- Record the Python version and dependency versions used for any numerical result.
+- Report search bounds, cutoff values, and assumptions clearly.
 
-Keep unpublished work private if appropriate. Do not commit credentials, tokens, or environment files. Record the Python version, dependency versions, search bounds, cutoff values, and random seeds for any reported result.
+## Final framing
 
-## License and collaboration
-
-This is an exploratory research prototype. Contributions that add convergence checks, null models, analytic comparisons, or corrections to the assumptions are especially welcome.
+This repository is best understood as a small, honest toy probe: a reproducible numerical experiment designed to test whether a conjectural geometric pattern is worth deeper mathematical investigation. It is not a proof, not a validated theory, and not a real-world application.
