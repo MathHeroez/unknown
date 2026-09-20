@@ -10,6 +10,18 @@
 - Numerical results: not generated or claimed
 - Deployment: none
 
+## Portfolio value
+
+The project is valuable as a research-engineering artifact because it demonstrates:
+
+- hypothesis-to-code translation,
+- null-model falsification instead of confirmation,
+- numerical convergence checks,
+- reproducibility discipline,
+- honest reporting of the limits of a toy model.
+
+It is not valuable as a proof claim until the local run produces and verifies actual output artifacts.
+
 ## Execution gate
 
 The probe becomes execution-verified only after a local run succeeds and `results/` contains all five files:
@@ -38,5 +50,15 @@ python --version > results/python_version.txt
 python -m pip freeze > results/freeze.txt
 ls -lh results/
 ```
+
+## Required reporting standard
+
+After a successful run, report the actual observed values and make no stronger claim than the evidence supports.
+
+Examples:
+
+- "The candidate sits at the 3.2nd percentile under the tested random null model."
+- "The optimum was stable across the tested cutoff and grid settings."
+- "The result is inconclusive for the physical hypothesis, but the diagnostic pipeline is reproducible."
 
 Do not report numerical findings until the five artifacts have been visibly verified and archived.

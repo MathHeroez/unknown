@@ -8,6 +8,18 @@ The code studies a simplified Dirac spectrum on a three-torus with variable radi
 
 This repository is deliberately a **falsification instrument**. A negative result is useful: it can stop an unsupported idea before months of deeper work are spent on it. A positive result is only a reason to design a stronger experiment.
 
+## Research-engineering value
+
+This repository is most valuable as a **research-engineering portfolio artifact** rather than as a mathematical proof. It demonstrates that the author can:
+
+- translate a vague hypothesis into runnable code,
+- build a null model instead of relying on anecdotal confirmation,
+- check numerical sensitivity rather than overstating significance,
+- separate a toy computational probe from a physical claim,
+- document conservative interpretation and explicit failure criteria.
+
+For hiring or research-adjacent work, the value comes from the method: a qualitative hypothesis was converted into a reproducible, falsifiable numerical test.
+
 ## Diagnostics
 
 - `random_baseline.py` compares the candidate with reproducible random unit-volume triples and writes a histogram of the complete baseline.
@@ -61,6 +73,22 @@ On Windows PowerShell, activate the environment with:
 ```
 
 The scripts use the repository's computational toy-model implementation. Do not replace it with a placeholder ratio-cost or noise-based convergence script.
+
+## What counts as a valid result
+
+A result is only meaningful if it is reported with the actual observed values.
+
+Examples of valid reporting:
+
+- "The candidate sits at the 3.2nd percentile of 10,000 random unit-volume triples under the tested parameters."
+- "The optimum is stable across the tested cutoffs and grid sizes within this toy model."
+- "The candidate was not unusually ranked under this null model; the result is inconclusive for the physical hypothesis."
+
+Examples of invalid reporting:
+
+- "This proves the field emerges in the spectrum."
+- "This is a new physical model."
+- "The CSVs are generated and verified" without having actually run the scripts.
 
 ## Archive policy
 
