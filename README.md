@@ -24,7 +24,8 @@ This is intentionally a toy experiment. It exists to answer one narrow question:
 
 - `dirac_t3.py` — simplified Dirac eigenvalue and counting routines
 - `minimize.py` — fixed-volume ratio search over a grid of radii
-- `random_baseline.py` — reproducible 10,000-sample null-model comparison
+- `random_baseline.py` — reproducible null-model comparison
+- `convergence.py` — cutoff, grid-resolution, and Lambda convergence matrix
 - `plot_search.py` — heatmap-based visualization of the search landscape
 - `requirements.txt` — project dependencies
 
@@ -36,16 +37,25 @@ source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 python minimize.py
 python random_baseline.py
+python convergence.py
 python plot_search.py
 ```
 
-The random-baseline script samples unit-volume radius triples using a fixed seed and writes `results/random_baseline.csv`. The generated `results/` directory is ignored by Git.
+The baseline and convergence scripts save generated CSV files under `results/`, which is ignored by Git.
+
+## Convergence test
+
+Run the default matrix with cutoffs `5, 10, 15, 20, 30`, grids `25, 50`, and `Lambda` values `8, 12, 16`:
+
+```bash
+python convergence.py
+```
+
+The output records the optimal radii, optimal count, distance from the field-inspired candidate, isotropic count, and runtime. A stable optimum across cutoffs and grid sizes is evidence against one specific truncation artifact, not proof of emergence. A drifting optimum means the current result is not reliable.
 
 ## Random-baseline interpretation
 
 The baseline is a diagnostic, not a proof. Its result depends on the proposal distribution, bounds, cutoff, and objective. A candidate that does not beat the baseline is weak evidence against the current toy objective. A candidate that does beat it is only evidence that the candidate is favored under this particular null model.
-
-Run multiple seeds and sampling distributions before drawing conclusions. In particular, compare the field-inspired candidate against an independently found optimizer and against the isotropic point `(1, 1, 1)`.
 
 ## What would make the experiment stronger?
 
