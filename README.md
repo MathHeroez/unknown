@@ -1,65 +1,95 @@
-# S4 x T3 Dirac Spectral Action
+# S4 x T3 Dirac Spectral Action: A Toy Probe
 
-## Objective
+> **Honest status:** This is a computational toy model for investigating whether certain arithmetic radius ratios are favored by a simplified spectral-count objective. It does **not** prove that \(\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5})\) emerges from geometry.
 
-This project tests a simple geometric hypothesis: whether the field
-K = Q(sqrt(2), sqrt(3), sqrt(5))
-can emerge from minimizing a low-energy spectral count on a 3-torus.
+## What this project is
 
-The model studies the Dirac operator on T^3 with variable radii:
+A reproducible test rig for checking a mathematical hunch quickly—minutes of computation instead of months of hand-waving.
 
-R = (R1, R2, R3)
+The code explores a simplified Dirac spectrum on a three-torus \(T^3\) with variable radii
 
-and compares how many eigenmodes fall below a cutoff scale Lambda.
+\[
+R=(R_1,R_2,R_3),
+\]
 
-The central quantity is:
+and counts modes below a cutoff:
 
-N(R) = #{mu < Lambda}
+\[
+N(R)=\#\{\mu: \mu^2<\Lambda^2\}.
+\]
 
-where the eigenvalues are modeled by
+It compares radius configurations at fixed volume, including a candidate related to
 
-mu = 2*pi*sqrt( sum_i ((n_i + eps_i)/R_i)^2 )
+\[
+\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5}).
+\]
 
-with twisted boundary conditions encoded by eps = (1/2, 1/2, 1/2).
+## What this project is not
 
-## Scientific motivation
+- Not a proof that the field \(\mathbb{Q}(\sqrt{2},\sqrt{3},\sqrt{5})\) emerges.
+- Not a complete spectral-action calculation.
+- Not a validated physical model.
+- Not a real-world engineering, medical, financial, or prediction tool.
+- Not evidence for a Theory of Everything.
 
-The idea is to test whether a special geometric ratio is preferred by the low-energy spectrum. If the minimizing radius configuration is close to the values suggested by the field
-K = Q(sqrt(2), sqrt(3), sqrt(5)),
-then the geometry may be encoding the same arithmetic data.
+The current objective is deliberately limited and simplified. The candidate field was considered from the outset, so treating a favorable result as a discovery would be circular.
 
-This is a numerical exploratory test rather than a formal theorem.
+## Why it may still be useful
 
-## Repository contents
+This repository provides a small, reproducible way to test whether the idea survives basic numerical scrutiny. A negative result is useful: it can rule out an attractive but unsupported conjecture before substantial effort is spent on it. A positive result would only motivate better-controlled research; it would not establish the conjecture.
 
-- `dirac_t3.py` — Dirac eigenvalue and counting routines
-- `minimize.py` — brute-force search over radius ratios with fixed volume
-- `plot_search.py` — optional surface/heatmap visualization of the search landscape
-- `README.md` — project summary and usage notes
-- `.gitignore` — local environment and cache exclusions
-- `requirements.txt` — dependency list
+## Current limitations
+
+1. **Simplified objective** — the code minimizes a mode count rather than the full spectral action \(\operatorname{Tr} f(D^2/\Lambda^2)\).
+2. **Finite numerical search** — results depend on grid resolution and search bounds.
+3. **Cutoff dependence** — both the lattice cutoff and \(\Lambda\) require convergence studies.
+4. **Possible degeneracies and boundary effects** — a low count need not represent meaningful geometry.
+5. **Circular candidate selection** — the arithmetic field was not predicted independently of the experiment.
+6. **No empirical connection** — the model currently makes no tested prediction about the physical world.
+
+## Files
+
+- `dirac_t3.py` — simplified T³ Dirac eigenvalue and state-count routines
+- `minimize.py` — fixed-volume grid search over radius ratios
+- `plot_search.py` — heatmap of the grid search
+- `requirements.txt` — Python dependencies
+- `.gitignore` — local environment and generated-file exclusions
 
 ## Quick start
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 python minimize.py
 python plot_search.py
 ```
 
-## Interpretation of results
+The plotting script writes `spectral_search.png`, which is intentionally ignored by Git.
 
-- If the best numerical minimum is close to the isotropic point `(1,1,1)`, then the spectral count does not prefer the special field-based geometry.
-- If the numerical minimum is close to a structured ratio such as
-  sqrt(3/2) and sqrt(5/2),
-  then the field-based candidate is favored by the optimization.
-- The comparison is meaningful only when the total torus volume is held fixed during the search.
+## What would make the test stronger?
 
-## Security and reproducibility
+A more serious follow-up should:
 
-- Keep the repository private if the work is unpublished or exploratory.
-- Do not commit tokens or secrets.
-- Use a GitHub fine-grained PAT or SSH for pushing.
-- Protect the `main` branch with PR review and required status checks.
+1. Replace the count with a justified spectral-action objective,
+   \(\operatorname{Tr} f(D^2/\Lambda^2)\).
+2. Test convergence as the lattice cutoff tends to infinity.
+3. Repeat the search over many \(\Lambda\), twist parameters, and volume normalizations.
+4. Compare against thousands of random fixed-volume radius triples, not only \((1,1,1)\).
+5. Use independent optimization methods and report uncertainty or tie structure.
+6. Test whether the special field was selected by the model rather than inserted as a candidate.
+7. State a mathematical or physical prediction that could in principle be independently checked.
+
+## Interpretation
+
+If the minimum is near \((1,1,1)\), this simple objective does not favor the proposed structured ratio.
+
+If a structured ratio repeatedly appears, that is only a numerical clue. It could reflect discretization, symmetry, cutoff artifacts, or the choice of objective. It should be treated as a hypothesis for further analysis—not as proof of emergence.
+
+## Reproducibility and security
+
+Keep unpublished work private if appropriate. Do not commit credentials, tokens, or environment files. Record the Python version, dependency versions, search bounds, cutoff values, and random seeds for any reported result.
+
+## License and collaboration
+
+This is an exploratory research prototype. Contributions that add convergence checks, null models, analytic comparisons, or corrections to the assumptions are especially welcome.
