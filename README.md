@@ -10,11 +10,12 @@ This repository is deliberately a **falsification instrument**. A negative resul
 
 ## Diagnostics
 
-- `random_baseline.py` compares the candidate with reproducible random unit-volume triples.
+- `random_baseline.py` compares the candidate with reproducible random unit-volume triples and writes a histogram of the complete baseline.
 - `convergence.py` checks sensitivity to lattice cutoff, grid resolution, and `Lambda`.
 - `minimize.py` performs the basic fixed-volume grid search.
 - `plot_search.py` visualizes the search landscape.
 - `dirac_t3.py` contains the simplified eigenvalue and state-count routines.
+- `tests/test_research.py` checks volume normalization, deterministic sampling, nonnegative counts, ranking, and CSV output.
 
 Run privately with:
 
@@ -22,11 +23,34 @@ Run privately with:
 python -m venv .venv
 source .venv/bin/activate       # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
+python -m pytest
 python random_baseline.py
 python convergence.py
 ```
 
-Generated outputs are written under `results/` and are ignored by Git. Record the environment and parameters after each run:
+Generated outputs are written under `results/`:
+
+- `random_baseline.csv` — every sampled triple and score
+- `random_baseline.png` — histogram of the complete baseline with the candidate marked
+- `convergence.csv` — convergence matrix
+- `freeze.txt` — dependency snapshot, when recorded manually
+
+Generated outputs are ignored by Git. `results/.gitkeep` preserves the directory in the repository.
+
+## Engineering Skills Demonstrated
+
+- Reproducible Python environments and dependency capture
+- Parameterized numerical experiments
+- Fixed-volume constrained optimization
+- Randomized null-model testing
+- Cutoff and grid-convergence analysis
+- Deterministic seeds and experiment logging
+- Unit testing of numerical invariants and output contracts
+- Explicit failure criteria and uncertainty-aware reporting
+
+## Reproducibility log
+
+After each run, record the environment and seed:
 
 ```bash
 python --version
@@ -34,7 +58,7 @@ pip freeze > results/freeze.txt
 echo "$RANDOM_SEED"
 ```
 
-Also preserve the command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values.
+Also preserve the exact command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values.
 
 ## Interpretation rules
 

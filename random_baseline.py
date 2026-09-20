@@ -1,9 +1,9 @@
 """Random-baseline test for the fixed-volume spectral-count objective.
 
 This script deliberately does not use the arithmetic candidate during sampling.
-It samples 10,000 positive radius triples from a reproducible log-uniform
-proposal, normalizes each triple to volume one, and compares the candidate
-R = (sqrt(2), sqrt(3), sqrt(5)) only after the baseline has been generated.
+It samples positive radius triples from a reproducible log-uniform proposal,
+normalizes each triple to volume one, and compares the candidate only after the
+baseline has been generated.
 
 Important: the result depends on the sampling distribution. This is a
 null-model diagnostic, not a proof of emergence.
@@ -37,21 +37,14 @@ def normalize_volume(radii: np.ndarray) -> np.ndarray:
 def sample_unit_volume_radii(
     samples: int, rng: np.random.Generator, log_bound: float = 1.5
 ) -> np.ndarray:
-    """Draw unit-volume triples from a symmetric log-uniform proposal.
-
-    Two independent log-radii are sampled uniformly from [-log_bound, log_bound].
-    The third is chosen so the product is exactly one. The resulting triples are
-    then normalized defensively against floating-point roundoff.
-    """
+    """Draw unit-volume triples from a symmetric log-uniform proposal."""
     if samples <= 0:
         raise ValueError("samples must be positive")
     if log_bound <= 0:
         raise ValueError("log_bound must be positive")
 
     log_r1_r2 = rng.uniform(-log_bound, log_bound, size=(samples, 2))
-    log_radii = np.column_stack(
-        [log_r1_r2, -np.sum(log_r1_r2, axis=1)]
-    )
+    log_radii = np.column_stack([log_r1_r2, -np.sum(log_r1_r2, axis=1)])
     return np.exp(log_radii)
 
 
@@ -71,14 +64,14 @@ def evaluate(radii: np.ndarray, Lambda: float, cutoff: int) -> np.ndarray:
 def summarize(candidate_score: int, baseline_scores: np.ndarray) -> dict[str, float]:
     """Return rank and percentile statistics, where lower scores are better."""
     scores = np.asarray(baseline_scores)
+    if scores.size == 0:
+        raise ValueError("baseline_scores must not be empty")
     better_or_equal = int(np.count_nonzero(scores <= candidate_score))
     strictly_better = int(np.count_nonzero(scores < candidate_score))
-    rank = strictly_better + 1
-    percentile_at_or_worse = 100.0 * better_or_equal / len(scores)
     return {
-        "rank": rank,
+        "rank": strictly_better + 1,
         "strictly_better": strictly_better,
-        "percentile_at_or_worse": percentile_at_or_worse,
+        "percentile_at_or_worse": 100.0 * better_or_equal / len(scores),
         "baseline_min": int(scores.min()),
         "baseline_median": float(np.median(scores)),
         "baseline_max": int(scores.max()),
@@ -86,7 +79,7 @@ def summarize(candidate_score: int, baseline_scores: np.ndarray) -> dict[str, fl
 
 
 def write_results(path: Path, radii: np.ndarray, scores: np.ndarray) -> None:
-    """Write sampled radii and scores for later inspection."""
+    """Write every sampled radius and score for later inspection."""
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.writer(handle)
@@ -97,6 +90,24 @@ def write_results(path: Path, radii: np.ndarray, scores: np.ndarray) -> None:
         )
 
 
+def write_histogram(scores: np.ndarray, candidate_score: int, path: Path) -> None:
+    """Save a histogram of all baseline scores with the candidate marked."""
+    import matplotlib.pyplot as plt
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig, axis = plt.subplots(figsize=(8, 5))
+    axis.hist(scores, bins="auto", alpha=0.8, color="steelblue", edgecolor="white")
+    axis.axvline(candidate_score, color="crimson", linewidth=2,
+                 label=f"candidate N={candidate_score}")
+    axis.set_xlabel("Spectral count N(R)")
+    axis.set_ylabel("Random triples")
+    axis.set_title("Complete random baseline")
+    axis.legend()
+    fig.tight_layout()
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--samples", type=int, default=DEFAULT_SAMPLES)
@@ -105,19 +116,18 @@ def main() -> None:
     parser.add_argument("--cutoff", type=int, default=DEFAULT_CUTOFF)
     parser.add_argument("--log-bound", type=float, default=1.5)
     parser.add_argument("--output", type=Path, default=Path("results/random_baseline.csv"))
+    parser.add_argument("--plot", type=Path, default=Path("results/random_baseline.png"))
     args = parser.parse_args()
 
     rng = np.random.default_rng(args.seed)
     radii = sample_unit_volume_radii(args.samples, rng, args.log_bound)
     scores = evaluate(radii, args.lambda_scale, args.cutoff)
-
     candidate = candidate_radii()
-    candidate_score = count_states(
-        tuple(candidate), Lambda=args.lambda_scale, cutoff=args.cutoff
-    )
+    candidate_score = count_states(tuple(candidate), Lambda=args.lambda_scale, cutoff=args.cutoff)
     stats = summarize(candidate_score, scores)
 
     write_results(args.output, radii, scores)
+    write_histogram(scores, candidate_score, args.plot)
 
     print("Random baseline for the simplified spectral-count objective")
     print(f"Samples: {args.samples}; seed: {args.seed}")
@@ -129,11 +139,9 @@ def main() -> None:
     print(f"Baseline median N: {stats['baseline_median']:.1f}")
     print(f"Random samples strictly better: {stats['strictly_better']}")
     print(f"Candidate rank (lower N is better): {stats['rank']} / {args.samples + 1}")
-    print(
-        "Candidate is at or below %.2f%% of random baseline scores"
-        % stats["percentile_at_or_worse"]
-    )
+    print("Candidate is at or below %.2f%% of random baseline scores" % stats["percentile_at_or_worse"])
     print(f"Saved samples to {args.output}")
+    print(f"Saved histogram to {args.plot}")
 
 
 if __name__ == "__main__":

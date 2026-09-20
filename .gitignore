@@ -11,5 +11,7 @@ venv/
 coverage/
 .pytest_cache/
 .mypy_cache/
-results/
+results/*
+!results/.gitkeep
+!results/freeze.txt
 spectral_search.png
