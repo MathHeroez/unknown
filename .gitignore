@@ -11,3 +11,5 @@ venv/
 coverage/
 .pytest_cache/
 .mypy_cache/
+results/
+spectral_search.png
