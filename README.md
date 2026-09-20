@@ -1,71 +1,55 @@
 # S4 x T3 Dirac Spectral Action: A Toy Probe
 
-> Honest status: this repository is a small computational probe for a conjectural idea, not a proof and not a physical model. It explores whether a simplified spectral-count objective on a 3-torus favors a special arithmetic radius ratio.
+> **Private research status:** This repository is a private exploratory research probe into the spectral geometry of \(S^4 \times T^3\). It tests whether a simplified Dirac-spectrum objective on a variable-radius \(T^3\) can favor arithmetic structure associated with \(K=\mathbb{Q}(\sqrt2,\sqrt3,\sqrt5)\). The project is intentionally limited to a finite computational sanity check intended to falsify or support the idea before deeper mathematical work. It is not a proof, completed physical model, or claim of emergence.
 
-## What this project does
+## Purpose
 
-This project studies a simplified Dirac spectrum on a three-torus `T^3` with variable radii `R = (R1, R2, R3)`. The code computes a finite set of eigenvalues and counts how many lie below a cutoff scale `Lambda`:
+The code studies a simplified Dirac spectrum on a three-torus with variable radii `R = (R1, R2, R3)`. It counts modes below a scale `Lambda` and compares fixed-volume radius triples. The field-inspired candidate is treated as a hypothesis to test, not as a discovery.
 
-`N(R) = #{mu : mu^2 < Lambda^2}`
+This repository is deliberately a **falsification instrument**. A negative result is useful: it can stop an unsupported idea before months of deeper work are spent on it. A positive result is only a reason to design a stronger experiment.
 
-It compares different radius ratios while keeping the total volume fixed. The goal is not to claim a theorem, but to see whether a structured geometry is numerically favored under a simple spectral heuristic.
+## Diagnostics
 
-## What this project is not
+- `random_baseline.py` compares the candidate with reproducible random unit-volume triples.
+- `convergence.py` checks sensitivity to lattice cutoff, grid resolution, and `Lambda`.
+- `minimize.py` performs the basic fixed-volume grid search.
+- `plot_search.py` visualizes the search landscape.
+- `dirac_t3.py` contains the simplified eigenvalue and state-count routines.
 
-- It is not a proof that `Q(sqrt(2), sqrt(3), sqrt(5))` emerges from geometry.
-- It is not a complete spectral-action calculation.
-- It is not a validated physical model.
-- It is not a real-world engineering or prediction tool.
-- It is not a theory of everything.
-
-This is intentionally a toy experiment. It exists to answer one narrow question: does the idea survive a quick numerical sanity check?
-
-## Repository contents
-
-- `dirac_t3.py` — simplified Dirac eigenvalue and counting routines
-- `minimize.py` — fixed-volume ratio search over a grid of radii
-- `random_baseline.py` — reproducible null-model comparison
-- `convergence.py` — cutoff, grid-resolution, and Lambda convergence matrix
-- `plot_search.py` — heatmap-based visualization of the search landscape
-- `requirements.txt` — project dependencies
-
-## Quick start
+Run privately with:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate       # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
-python minimize.py
 python random_baseline.py
 python convergence.py
-python plot_search.py
 ```
 
-The baseline and convergence scripts save generated CSV files under `results/`, which is ignored by Git.
-
-## Convergence test
-
-Run the default matrix with cutoffs `5, 10, 15, 20, 30`, grids `25, 50`, and `Lambda` values `8, 12, 16`:
+Generated outputs are written under `results/` and are ignored by Git. Record the environment and parameters after each run:
 
 ```bash
-python convergence.py
+python --version
+pip freeze > results/freeze.txt
+echo "$RANDOM_SEED"
 ```
 
-The output records the optimal radii, optimal count, distance from the field-inspired candidate, isotropic count, and runtime. A stable optimum across cutoffs and grid sizes is evidence against one specific truncation artifact, not proof of emergence. A drifting optimum means the current result is not reliable.
+Also preserve the command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values.
 
-## Random-baseline interpretation
+## Interpretation rules
 
-The baseline is a diagnostic, not a proof. Its result depends on the proposal distribution, bounds, cutoff, and objective. A candidate that does not beat the baseline is weak evidence against the current toy objective. A candidate that does beat it is only evidence that the candidate is favored under this particular null model.
+- A favorable percentile in one random baseline is not evidence of emergence; repeat with multiple seeds and proposal distributions.
+- A stable optimum across finite cutoffs and grid sizes only reduces concern about one numerical artifact.
+- A drifting optimum means the current objective or search is not reliable.
+- The arithmetic candidate must be evaluated after a field-blind optimization, not inserted into the optimizer.
+- Passing these tests would justify a better experiment, not a proof or completed physical theory.
 
-## What would make the experiment stronger?
+## Remaining requirements
 
-1. Replace the raw count with a justified spectral action.
-2. Run convergence checks over lattice cutoff, grid size, and `Lambda`.
-3. Compare against multiple random fixed-volume baselines.
-4. Test multiple objective functions and twist choices.
-5. Find the optimizer without mentioning the proposed arithmetic field, then compare afterward.
-6. Define a mathematical or physical prediction that could be independently checked.
+1. Replace the raw mode count with a justified spectral action `Tr f(D^2 / Lambda^2)`.
+2. Establish convergence under the relevant limits.
+3. Test multiple smooth functions `f` and spin-structure twists.
+4. Use independent null models and field-blind optimization.
+5. Define a mathematical or physical prediction that could be checked independently.
 
-## Reproducibility and security
-
-Keep unpublished work private if appropriate. Do not commit credentials, tokens, or environment files. Record Python and dependency versions, search bounds, cutoff values, proposal distributions, and random seeds for every reported result.
+Keep this repository private until the diagnostics are independently reproducible and the stated checks have been addressed.
