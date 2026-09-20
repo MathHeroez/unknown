@@ -1,6 +1,6 @@
 # S4 x T3 Dirac Spectral Action: A Toy Probe
 
-> **Private research status:** This repository is a private exploratory research probe into the spectral geometry of \(S^4 \times T^3\). It tests whether a simplified Dirac-spectrum objective on a variable-radius \(T^3\) can favor arithmetic structure associated with \(K=\mathbb{Q}(\sqrt2,\sqrt3,\sqrt5)\). The project is intentionally limited to a finite computational sanity check intended to falsify or support the idea before deeper mathematical work. It is not a proof, completed physical model, or claim of emergence.
+> **Private exploratory probe.** This repository is a private exploratory research probe into the spectral geometry of \(S^4 \times T^3\). It tests whether a simplified Dirac-spectrum objective on a variable-radius \(T^3\) can favor arithmetic structure associated with \(K=\mathbb{Q}(\sqrt2,\sqrt3,\sqrt5)\). The project is intentionally limited to a finite computational sanity check intended to falsify or support the idea before deeper mathematical work. It is not a proof, completed physical model, or claim of emergence.
 
 ## Purpose
 
@@ -17,7 +17,7 @@ This repository is deliberately a **falsification instrument**. A negative resul
 - `dirac_t3.py` contains the simplified eigenvalue and state-count routines.
 - `tests/test_research.py` checks volume normalization, deterministic sampling, nonnegative counts, ranking, and CSV output.
 
-Run privately with:
+## Run privately
 
 ```bash
 python -m venv .venv
@@ -58,7 +58,7 @@ pip freeze > results/freeze.txt
 echo "$RANDOM_SEED"
 ```
 
-Also preserve the exact command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values.
+Also preserve the exact command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values. Preserve the exact terminal output alongside the generated CSV files when possible.
 
 ## Interpretation rules
 
