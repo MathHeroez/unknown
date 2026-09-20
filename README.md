@@ -11,7 +11,7 @@ This repository is deliberately a **falsification instrument**. A negative resul
 ## Diagnostics
 
 - `random_baseline.py` compares the candidate with reproducible random unit-volume triples and writes a histogram of the complete baseline.
-- `convergence.py` checks sensitivity to lattice cutoff, grid resolution, and `Lambda`.
+- `convergence.py` checks sensitivity to lattice cutoff, grid resolution, and `Lambda` using actual searches without injected noise.
 - `minimize.py` performs the basic fixed-volume grid search.
 - `plot_search.py` visualizes the search landscape.
 - `dirac_t3.py` contains the simplified eigenvalue and state-count routines.
@@ -19,23 +19,33 @@ This repository is deliberately a **falsification instrument**. A negative resul
 
 ## Run privately
 
+Run from the repository root:
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate       # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
-python -m pytest
+
+python -m pytest -v
 python random_baseline.py
 python convergence.py
+
+python --version > results/python_version.txt
+pip freeze > results/freeze.txt
+echo "$RANDOM_SEED"
 ```
 
-Generated outputs are written under `results/`:
+The default run produces these five reproducibility artifacts:
 
-- `random_baseline.csv` — every sampled triple and score
-- `random_baseline.png` — histogram of the complete baseline with the candidate marked
-- `convergence.csv` — convergence matrix
-- `freeze.txt` — dependency snapshot, when recorded manually
+```text
+results/random_baseline.csv
+results/random_baseline.png
+results/convergence.csv
+results/python_version.txt
+results/freeze.txt
+```
 
-Generated outputs are ignored by Git. `results/.gitkeep` preserves the directory in the repository.
+The scripts use the repository's computational toy-model implementation. Do not replace it with a placeholder ratio-cost or noise-based convergence script.
 
 ## Engineering Skills Demonstrated
 
@@ -48,25 +58,43 @@ Generated outputs are ignored by Git. `results/.gitkeep` preserves the directory
 - Unit testing of numerical invariants and output contracts
 - Explicit failure criteria and uncertainty-aware reporting
 
-## Reproducibility log
+## Archive policy
 
-After each run, record the environment and seed:
+Generated outputs are ignored by Git by default. For a private audit trail, keep the five artifacts local and archive the complete `results/` directory outside Git. If selected outputs are intentionally published for reproducibility, inspect them first and force-add only the approved files:
 
 ```bash
-python --version
-pip freeze > results/freeze.txt
-echo "$RANDOM_SEED"
+git add -f \
+  results/random_baseline.csv \
+  results/random_baseline.png \
+  results/convergence.csv \
+  results/python_version.txt \
+  results/freeze.txt
+
+git commit -m "Archive reproducibility outputs"
+git push
 ```
 
-Also preserve the exact command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values. Preserve the exact terminal output alongside the generated CSV files when possible.
+Before publishing, inspect `results/freeze.txt` and all CSV files for sensitive paths, private package indexes, local usernames, or other information that should not be public. Leaving generated outputs untracked is the conservative default for this exploratory research probe.
+
+## Reproducibility log
+
+Preserve the exact command-line arguments, random seed, proposal distribution, cutoff, grid size, and `Lambda` values. Preserve terminal output alongside the generated artifacts when possible. The default random-baseline seed is recorded in the script and printed at runtime.
 
 ## Interpretation rules
 
+- A percentile describes performance under one sampling distribution; it is not proof.
+- A histogram is a visualization of the sampled baseline; it is not independent evidence.
+- Convergence measures sensitivity to finite numerical parameters; it is not validation of the model.
+- Tests verify implementation invariants and output contracts; they do not validate the physical model.
 - A favorable percentile in one random baseline is not evidence of emergence; repeat with multiple seeds and proposal distributions.
 - A stable optimum across finite cutoffs and grid sizes only reduces concern about one numerical artifact.
 - A drifting optimum means the current objective or search is not reliable.
 - The arithmetic candidate must be evaluated after a field-blind optimization, not inserted into the optimizer.
 - Passing these tests would justify a better experiment, not a proof or completed physical theory.
+
+## Portfolio description
+
+> A reproducible research-engineering prototype using a simplified computational toy model to test a spectral-geometry hypothesis through randomized baselines, numerical convergence checks, and explicit failure criteria.
 
 ## Remaining requirements
 
